@@ -25,10 +25,13 @@ SELECT *
 FROM avgPriceBook;
 
 # 4. Вывести информацию о книгах по «Computer Science» с наибольшим количеством страниц.
+# Использовать внутренние запросы
 SELECT NameTheme, NameBook, MAX(Pages)
 FROM Books
          JOIN Themes T ON T.ID_THEME = Books.ID_THEME
 GROUP BY NameTheme;
+
+
 
 # 5. Показать на экран сумму страниц по каждой из тематик, при этом учитывать только книги одной из следующих тематик: «Computer
 # Science», «Science Fiction», «Web Development» и с количеством страниц более 300.
@@ -58,17 +61,33 @@ FROM Sales
 ORDER BY NameCountry, NameShop DESC;
 
 # 8. Создать запрос, показывающий самую популярную книгу
+# Использовать внутренние запросы
+
 SELECT NameBook, T.NameTheme, A.FirstName, A.LastName, MAX(Quantity)
 FROM Sales
          JOIN Books B ON B.ID_BOOK = Sales.ID_BOOK
          JOIN Themes T ON T.ID_THEME = B.ID_THEME
          JOIN Authors A ON A.ID_AUTHOR = B.ID_AUTHOR;
 
+SELECT (SELECT NameBook FROM Books WHERE Sales.ID_BOOK = Books.ID_BOOK) AS NameBook,
+       (SELECT (SELECT NameTheme FROM Themes WHERE Themes.ID_THEME = Books.ID_THEME)
+        FROM Books
+        WHERE Sales.ID_BOOK = Books.ID_BOOK)                            AS NameTheme,
+       (SELECT (SELECT FirstName FROM Authors WHERE Books.ID_AUTHOR = Authors.ID_AUTHOR)
+        FROM Books
+        WHERE Sales.ID_BOOK = Books.ID_BOOK)                            AS FirstName,
+       (SELECT (SELECT LastName FROM Authors WHERE Books.ID_AUTHOR = Authors.ID_AUTHOR)
+        FROM Books
+        WHERE Sales.ID_BOOK = Books.ID_BOOK)                            AS LastName,
+       MAX(Quantity)
+FROM Sales;
+
 # 9. Создать временную таблицу, в которой предоставляется информация об авторах, имена которых начинаются с А или В.
 CREATE TEMPORARY TABLE authorsAOrB
 SELECT *
 FROM Authors
-WHERE FirstName LIKE 'A%' OR FirstName LIKE 'B%';
+WHERE FirstName LIKE 'A%'
+   OR FirstName LIKE 'B%';
 
 SELECT *
 FROM authorsAOrB;
