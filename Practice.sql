@@ -26,18 +26,13 @@ FROM avgPriceBook;
 
 # 4. Вывести информацию о книгах по «Computer Science» с наибольшим количеством страниц.
 # Использовать внутренние запросы
-SELECT NameTheme, NameBook, MAX(Pages)
+SELECT NameTheme, NameBook, Pages
 FROM Books
          JOIN Themes T ON T.ID_THEME = Books.ID_THEME
-WHERE NameTheme = 'Computer Science'
-GROUP BY NameTheme;
-
-SELECT (SELECT NameTheme FROM Themes WHERE Books.ID_THEME = Themes.ID_THEME) AS NameTheme,
-       NameBook,
-       MAX(Pages)
-FROM Books
-WHERE Books.ID_THEME = (SELECT ID_THEME FROM Themes WHERE NameTheme = 'Computer Science')
-GROUP BY NameTheme;
+WHERE Pages = (SELECT MAX(Pages)
+               FROM Books
+                        JOIN Themes T2 ON T2.ID_THEME = Books.ID_THEME
+               WHERE NameTheme = 'Computer Science');
 
 # 5. Показать на экран сумму страниц по каждой из тематик, при этом учитывать только книги одной из следующих тематик: «Computer
 # Science», «Science Fiction», «Web Development» и с количеством страниц более 300.
@@ -69,24 +64,10 @@ ORDER BY NameCountry, NameShop DESC;
 # 8. Создать запрос, показывающий самую популярную книгу
 # Использовать внутренние запросы
 
-SELECT NameBook, T.NameTheme, A.FirstName, A.LastName, MAX(Quantity)
+SELECT NameBook, Quantity
 FROM Sales
          JOIN Books B ON B.ID_BOOK = Sales.ID_BOOK
-         JOIN Themes T ON T.ID_THEME = B.ID_THEME
-         JOIN Authors A ON A.ID_AUTHOR = B.ID_AUTHOR;
-
-SELECT (SELECT NameBook FROM Books WHERE Sales.ID_BOOK = Books.ID_BOOK) AS NameBook,
-       (SELECT (SELECT NameTheme FROM Themes WHERE Themes.ID_THEME = Books.ID_THEME)
-        FROM Books
-        WHERE Sales.ID_BOOK = Books.ID_BOOK)                            AS NameTheme,
-       (SELECT (SELECT FirstName FROM Authors WHERE Books.ID_AUTHOR = Authors.ID_AUTHOR)
-        FROM Books
-        WHERE Sales.ID_BOOK = Books.ID_BOOK)                            AS FirstName,
-       (SELECT (SELECT LastName FROM Authors WHERE Books.ID_AUTHOR = Authors.ID_AUTHOR)
-        FROM Books
-        WHERE Sales.ID_BOOK = Books.ID_BOOK)                            AS LastName,
-       MAX(Quantity)
-FROM Sales;
+WHERE Quantity = (SELECT MAX(Quantity) FROM Sales);
 
 # 9. Создать временную таблицу, в которой предоставляется информация об авторах, имена которых начинаются с А или В.
 CREATE TEMPORARY TABLE authorsAOrB
