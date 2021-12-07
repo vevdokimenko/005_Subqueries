@@ -6,7 +6,7 @@ SELECT NameBook, T.NameTheme, A.FirstName, A.LastName
 FROM Books
          JOIN Themes T ON T.ID_THEME = Books.ID_THEME
          JOIN Authors A ON A.ID_AUTHOR = Books.ID_AUTHOR
-WHERE Books.NameBook LIKE '% % % % %';
+WHERE NameBook LIKE '% % % % %';
 
 # 2. Показать количество авторов в базе данных. Результат сохранить в другую таблицу.
 CREATE TEMPORARY TABLE tmpAuthors
@@ -97,4 +97,3 @@ WHERE FirstName LIKE 'A%'
 
 SELECT *
 FROM authorsAOrB;
-
