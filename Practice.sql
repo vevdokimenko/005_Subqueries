@@ -29,9 +29,15 @@ FROM avgPriceBook;
 SELECT NameTheme, NameBook, MAX(Pages)
 FROM Books
          JOIN Themes T ON T.ID_THEME = Books.ID_THEME
+WHERE NameTheme = 'Computer Science'
 GROUP BY NameTheme;
 
-
+SELECT (SELECT NameTheme FROM Themes WHERE Books.ID_THEME = Themes.ID_THEME) AS NameTheme,
+       NameBook,
+       MAX(Pages)
+FROM Books
+WHERE Books.ID_THEME = (SELECT ID_THEME FROM Themes WHERE NameTheme = 'Computer Science')
+GROUP BY NameTheme;
 
 # 5. Показать на экран сумму страниц по каждой из тематик, при этом учитывать только книги одной из следующих тематик: «Computer
 # Science», «Science Fiction», «Web Development» и с количеством страниц более 300.
