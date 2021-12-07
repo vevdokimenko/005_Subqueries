@@ -6,7 +6,7 @@ SELECT NameBook, T.NameTheme, A.FirstName, A.LastName
 FROM Books
          JOIN Themes T ON T.ID_THEME = Books.ID_THEME
          JOIN Authors A ON A.ID_AUTHOR = Books.ID_AUTHOR
-WHERE ((LENGTH(NameBook) - LENGTH(REPLACE(NameBook, ' ', '')) + 1) > 4);
+WHERE Books.NameBook LIKE '% % % % %';
 
 # 2. Показать количество авторов в базе данных. Результат сохранить в другую таблицу.
 CREATE TEMPORARY TABLE tmpAuthors
