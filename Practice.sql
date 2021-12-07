@@ -51,8 +51,25 @@ FROM maxPriceInTheme;
 
 # 7. Создать запрос, который позволяет вывести всю информацию о
 # работе магазинов. Отсортировать выборку по странам в возрастающем и по названиям магазинов в убывающем порядке.
-
+SELECT ID_SALE, Price, Quantity, NameShop, NameCountry
+FROM Sales
+         JOIN Shops S ON S.ID_SHOP = Sales.ID_SHOP
+         JOIN Country C ON C.ID_COUNTRY = S.ID_COUNTRY
+ORDER BY NameCountry, NameShop DESC;
 
 # 8. Создать запрос, показывающий самую популярную книгу
+SELECT NameBook, T.NameTheme, A.FirstName, A.LastName, MAX(Quantity)
+FROM Sales
+         JOIN Books B ON B.ID_BOOK = Sales.ID_BOOK
+         JOIN Themes T ON T.ID_THEME = B.ID_THEME
+         JOIN Authors A ON A.ID_AUTHOR = B.ID_AUTHOR;
+
 # 9. Создать временную таблицу, в которой предоставляется информация об авторах, имена которых начинаются с А или В.
+CREATE TEMPORARY TABLE authorsAOrB
+SELECT *
+FROM Authors
+WHERE FirstName LIKE 'A%' OR FirstName LIKE 'B%';
+
+SELECT *
+FROM authorsAOrB;
 
